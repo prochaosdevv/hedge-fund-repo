@@ -3,6 +3,7 @@
 import { useState } from "react"
 import {
   Dialog,
+  DialogOverlay,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -89,7 +90,11 @@ export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogP
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="bg-surface border-border text-text max-w-md">
+        {/* Overlay (optional if your Dialog already provides one) */}
+        <DialogOverlay className="fixed inset-0 bg-black/50 z-40" />
+
+        {/* Modal content */}
+        <DialogContent className="bg-white border-border text-text max-w-md rounded-2xl p-6 shadow-2xl z-50">
           <DialogHeader>
             <DialogTitle className="text-text">Invest in {fund.name}</DialogTitle>
             <DialogDescription className="text-text-muted">
@@ -161,16 +166,27 @@ export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogP
               </div>
             </div>
 
-            {/* Commission Info */}
+            {/* Manager Commission */}
             <div className="p-3 rounded-lg bg-background border border-border">
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 text-primary mt-0.5" />
                 <div className="text-sm text-text-muted">
-                  <p className="font-medium text-text mb-1">Performance Commission</p>
+                  <p className="font-medium text-text mb-1">Manager Commission</p>
                   <p>
                     The fund manager charges a {fund.commissionRate}% commission on profits only. You keep 100% of your
                     principal.
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Platform Commission */}
+            <div className="p-3 rounded-lg bg-background border border-border">
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 text-primary mt-0.5" />
+                <div className="text-sm text-text-muted">
+                  <p className="font-medium text-text mb-1">Platform Commission</p>
+                  <p>We charge 1% of your investment amount as our platform fee.</p>
                 </div>
               </div>
             </div>
@@ -194,6 +210,7 @@ export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogP
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
       <Toaster />
     </>
   )

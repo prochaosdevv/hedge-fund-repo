@@ -38,6 +38,7 @@ export function FundCard({ fund }: FundCardProps) {
 
   return (
     <>
+    <div>
       <Card className="bg-surface border-border hover:border-primary/50 transition-colors">
         <CardHeader>
           <div className="flex items-start justify-between mb-2">
@@ -145,6 +146,7 @@ export function FundCard({ fund }: FundCardProps) {
       </Card>
 
       <InvestmentDialog fund={fund} open={showInvestDialog} onOpenChange={setShowInvestDialog} />
+      </div>
     </>
   )
 }

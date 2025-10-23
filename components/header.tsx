@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { WalletButton } from "./wallet-button"
 import { TrendingUp } from "lucide-react"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 export function Header() {
   return (
@@ -39,7 +40,8 @@ export function Header() {
             </Link>
           </nav>
 
-          <WalletButton />
+              <ConnectButton />
+      
         </div>
       </div>
     </header>

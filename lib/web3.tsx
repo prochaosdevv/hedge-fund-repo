@@ -1,81 +1,81 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import "@rainbow-me/rainbowkit/styles.css";
+import {
+  RainbowKitProvider,
+  getDefaultConfig,
+  useConnectModal,
+} from "@rainbow-me/rainbowkit";
+import { WagmiProvider, useAccount, useDisconnect, useChainId } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { mainnet, polygon, optimism, arbitrum, base } from "wagmi/chains";
+import React, { createContext, useContext, type ReactNode, useMemo } from "react";
 
-interface Web3ContextType {
-  account: string | null
-  isConnected: boolean
-  connect: () => Promise<void>
-  disconnect: () => void
-  chainId: number | null
-}
+type Web3ContextType = {
+  account: string | null;
+  isConnected: boolean;
+  connect: () => Promise<void>;
+  disconnect: () => void;
+  chainId: number | null;
+};
 
-const Web3Context = createContext<Web3ContextType>({
+const WagmiBackedWeb3Context = createContext<Web3ContextType>({
   account: null,
   isConnected: false,
   connect: async () => {},
   disconnect: () => {},
   chainId: null,
-})
+});
 
-export const useWeb3 = () => useContext(Web3Context)
+// ---- Wagmi + RainbowKit root providers ----
+const wagmiConfig = getDefaultConfig({
+  appName: "DeFi Hedge Fund Platform",
+  projectId: "YOUR_PROJECT_ID", // get from https://cloud.walletconnect.com
+  chains: [mainnet, polygon, optimism, arbitrum, base],
+  ssr: true, // Next.js SSR
+});
 
-export function Web3Provider({ children }: { children: ReactNode }) {
-  const [account, setAccount] = useState<string | null>(null)
-  const [chainId, setChainId] = useState<number | null>(null)
+const queryClient = new QueryClient();
 
-  const connect = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        })
-        setAccount(accounts[0])
+// This component adapts Wagmi/RainbowKit into your old context shape
+function Web3Bridge({ children }: { children: ReactNode }) {
+  const { address, isConnected } = useAccount();
+  const chainId = useChainId();
+  const { disconnect } = useDisconnect();
+  const { openConnectModal } = useConnectModal();
 
-        const chain = await window.ethereum.request({ method: "eth_chainId" })
-        setChainId(Number.parseInt(chain, 16))
-      } catch (error) {
-        console.error("[v0] Error connecting wallet:", error)
-      }
-    } else {
-      alert("Please install MetaMask or another Web3 wallet")
-    }
-  }
-
-  const disconnect = () => {
-    setAccount(null)
-    setChainId(null)
-  }
-
-  useEffect(() => {
-    if (typeof window.ethereum !== "undefined") {
-      window.ethereum.on("accountsChanged", (accounts: string[]) => {
-        setAccount(accounts[0] || null)
-      })
-
-      window.ethereum.on("chainChanged", (chain: string) => {
-        setChainId(Number.parseInt(chain, 16))
-      })
-    }
-  }, [])
+  const value = useMemo<Web3ContextType>(
+    () => ({
+      account: address ?? null,
+      isConnected,
+      chainId: chainId ?? null,
+      disconnect: () => disconnect(),
+      connect: async () => {
+        // Open RainbowKit modal (WalletConnect, MetaMask, etc.)
+        if (openConnectModal) openConnectModal();
+      },
+    }),
+    [address, isConnected, chainId, disconnect, openConnectModal]
+  );
 
   return (
-    <Web3Context.Provider
-      value={{
-        account,
-        isConnected: !!account,
-        connect,
-        disconnect,
-        chainId,
-      }}
-    >
+    <WagmiBackedWeb3Context.Provider value={value}>
       {children}
-    </Web3Context.Provider>
-  )
+    </WagmiBackedWeb3Context.Provider>
+  );
 }
 
-declare global {
-  interface Window {
-    ethereum?: any
-  }
+// ---- Exported API matching your existing usage ----
+export function Web3Provider({ children }: { children: ReactNode }) {
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          <Web3Bridge>{children}</Web3Bridge>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }
+
+export const useWeb3 = () => useContext(WagmiBackedWeb3Context);

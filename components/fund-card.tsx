@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { InvestmentDialog } from "@/components/investment-dialog"
 import type { HedgeFund } from "@/lib/types"
 import { TrendingUp, TrendingDown, Users, DollarSign, Clock } from "lucide-react"
+ 
 
 interface FundCardProps {
   fund: HedgeFund
@@ -35,6 +36,8 @@ export function FundCard({ fund }: FundCardProps) {
       color: isPositive ? "text-success" : "text-destructive",
     }
   }
+ 
+ 
 
   return (
     <>

@@ -30,7 +30,7 @@ const WagmiBackedWeb3Context = createContext<Web3ContextType>({
 // ---- Wagmi + RainbowKit root providers ----
 const wagmiConfig = getDefaultConfig({
   appName: "DeFi Hedge Fund Platform",
-  projectId: "YOUR_PROJECT_ID", // get from https://cloud.walletconnect.com
+  projectId: "3b6a68297fa9e10b720a9fb6e1bf3ec8", // get from https://cloud.walletconnect.com
   chains: [mainnet, polygon, optimism, arbitrum, base],
   ssr: true, // Next.js SSR
 });

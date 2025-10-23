@@ -4,7 +4,7 @@ import { useWeb3 } from "@/lib/web3"
 import { Button } from "@/components/ui/button"
 import { Wallet, LogOut } from "lucide-react"
 
-export function WalletButton() {
+export function WalletButton({balance}) {
   const { account, isConnected, connect, disconnect } = useWeb3()
 
   const formatAddress = (address: string) => {
@@ -13,15 +13,23 @@ export function WalletButton() {
 
   if (isConnected && account) {
     return (
+      <div className="flex items-center justify-between gap-2">
       <Button
         variant="outline"
-        onClick={disconnect}
-        className="gap-2 bg-surface border-border hover:bg-surface-elevated text-text"
+        // onClick={disconnect}
+        className="gap-2 bg-surface border-border mr-2 hover:bg-surface-elevated hover:text-black text-text"
+      >${balance}</Button>
+      <Button
+        variant="outline"
+        // onClick={disconnect}
+        className="gap-2 bg-surface border-border hover:bg-surface-elevated hover:text-black text-text"
       >
         <Wallet className="h-4 w-4" />
-        {formatAddress(account)}
-        <LogOut className="h-4 w-4" />
+        {formatAddress(account)}  
+        {/* <LogOut className="h-4 w-4" /> */}
       </Button>
+      </div>
+
     )
   }
 

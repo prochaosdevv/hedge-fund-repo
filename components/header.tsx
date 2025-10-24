@@ -7,6 +7,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useAccount } from "wagmi"
 import { getUnifiedBalances, initializeWithProvider, isInitialized } from "@/lib/nexus"
 import { useCallback, useEffect, useState } from "react"
+import BalancesModal from "./BalancesModal"
 
 
 export function Header() {
@@ -14,6 +15,7 @@ export function Header() {
 
   const { connector,address } = useAccount();
     const [balances, setBalances] = useState<any>(null);
+    const [showModal,setShowModal] = useState<any>(null)
 
   const init = async () => {
     try {
@@ -92,8 +94,8 @@ export function Header() {
           <pre className="whitespace-pre-wrap">${JSON.stringify(balances, null, 2)}</pre>
         )} */}
               {/* <ConnectButton /> */}
-              <WalletButton balance={balances} />
-      
+              <WalletButton onBalanceClick={() => setShowModal(true)} balance={balances} />
+              <BalancesModal open={showModal} onOpenChange={setShowModal} assets={balances} totalUsd={"0"} />
         </div>
       </div>
     </header>

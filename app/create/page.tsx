@@ -15,10 +15,12 @@ import { Toaster } from "@/components/ui/toaster"
 import type { FundAllocation } from "@/lib/types"
 import { ArrowLeft, Info } from "lucide-react"
 import Link from "next/link"
+import { useAccount, useReadContract } from "wagmi"
+import { abi } from "../../config/hedge-fund";
 
 export default function CreateFundPage() {
   const router = useRouter()
-  const { isConnected } = useWeb3()
+  const { isConnected } = useAccount()
   const { toast } = useToast()
 
   const [fundName, setFundName] = useState("")
@@ -29,6 +31,14 @@ export default function CreateFundPage() {
 
   const totalAllocation = allocations.reduce((sum, alloc) => sum + alloc.percentage, 0)
   const isValid = fundName && description && allocations.length > 0 && totalAllocation === 100
+
+  const { data } = useReadContract({
+    address: "0xYourContractAddress",
+    abi,
+    functionName: "BPS_DENOM",
+    args: [],
+  });
+  console.log(data)
 
   const handleCreateFund = async () => {
     if (!isConnected) {

@@ -1,4 +1,5 @@
-export const HedgeAbi =  [
+export const HedgeAbi = 
+[
 	{
 		"inputs": [
 			{

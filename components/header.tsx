@@ -15,6 +15,7 @@ export function Header() {
 
   const { connector,address } = useAccount();
     const [balances, setBalances] = useState<any>(null);
+    const [balance, setBalance] = useState<any>(null);
     const [showModal,setShowModal] = useState<any>(null)
 
   const init = async () => {
@@ -40,7 +41,8 @@ export function Header() {
      const _b = await getUnifiedBalances()
       // console.log("balances",_b)
       const sum = _b.reduce((sum, item) => sum + item.balanceInFiat, 0)
-      setBalances(sum)
+      setBalance(sum)
+      setBalances(_b)
   }
 
 
@@ -94,8 +96,8 @@ export function Header() {
           <pre className="whitespace-pre-wrap">${JSON.stringify(balances, null, 2)}</pre>
         )} */}
               {/* <ConnectButton /> */}
-              <WalletButton onBalanceClick={() => setShowModal(true)} balance={balances} />
-              <BalancesModal open={showModal} onOpenChange={setShowModal} assets={balances} totalUsd={"0"} />
+              <WalletButton onBalanceClick={() => setShowModal(true)} balance={balance} />
+              <BalancesModal open={showModal} onOpenChange={setShowModal} assets={balances} totalUsd={balance} />
         </div>
       </div>
     </header>

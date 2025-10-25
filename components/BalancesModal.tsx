@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils"; // if you have it; otherwise remove cn and className joins
 import { ChevronUp } from "lucide-react";
+import Image from "next/image";
 
 type ChainBreakdown = {
   chain: string;          // e.g., "Ethereum Mainnet"
@@ -29,6 +30,7 @@ type Props = {
 };
 
 export default function BalancesModal({ open, onOpenChange, totalUsd, assets }: Props) {
+  // console.log("BalancesModal assets:", assets);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -38,19 +40,21 @@ export default function BalancesModal({ open, onOpenChange, totalUsd, assets }: 
         <DialogHeader className="px-6 pt-5 pb-3">
           <DialogTitle className="text-[18px] leading-none">
             <span className="text-teal-900 font-semibold">Total Balance:</span>{" "}
-            <span className="text-teal-900 font-extrabold">{totalUsd}</span>
+            <span className="text-teal-900 font-extrabold">${totalUsd}</span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="px-4 pb-4">
           <div className="rounded-2xl border-[2px] border-black/80 shadow-sm">
-            <ScrollArea className="max-h-[340px] p-4">
-              <div className="space-y-3">
-                {assets && assets.map((a, idx) => (
-                  <AssetCard key={idx} asset={a} />
-                ))}
+            {/* <ScrollArea className="max-h-[340px] p-4"> */}
+              <div className="space-y-3 max-h-[340px] overflow-y-auto pr-2">
+                {assets && assets.map((a, idx) => 
+                (                    
+                          <AssetCard key={idx} asset={a} />
+                    )
+          )}
               </div>
-            </ScrollArea>
+            {/* </ScrollArea> */}
           </div>
         </div>
       </DialogContent>
@@ -59,21 +63,22 @@ export default function BalancesModal({ open, onOpenChange, totalUsd, assets }: 
 }
 
 function AssetCard({ asset }: { asset: Asset }) {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div className="rounded-xl border border-black/20 p-4">
       <div className="flex items-start gap-3">
         {/* icon */}
         <div className="h-8 w-8 shrink-0 grid place-items-center rounded-full bg-white">
-          {asset.icon ?? <EthIcon />}
+          {/* {asset.icon ?? <EthIcon />} */}
+          <Image src={asset.icon as string} alt={asset.symbol} width={32} height={32} className="h-6 w-6" />
         </div>
 
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <div className="font-extrabold tracking-tight text-teal-900">{asset.symbol}</div>
-              <div className="text-[14px] text-teal-900/80">{asset.usd}</div>
+              <div className="text-[14px] text-teal-900/80">${asset.balanceInFiat}</div>
             </div>
 
             <button
@@ -81,7 +86,7 @@ function AssetCard({ asset }: { asset: Asset }) {
               className="flex items-center gap-2 text-teal-900"
               aria-label="toggle breakdown"
             >
-              <span className="tabular-nums">{asset.amount}</span>
+              <span className="tabular-nums">{parseFloat(asset.balance).toFixed(3)}</span>
               <ChevronUp
                 className={cn(
                   "h-4 w-4 transition-transform",
@@ -96,17 +101,17 @@ function AssetCard({ asset }: { asset: Asset }) {
               {asset.breakdown.map((b, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div className="h-6 w-6 shrink-0 grid place-items-center rounded-full bg-white">
-                    {b.icon ?? <EthIcon />}
+                    <Image src={b.chain.logo as string} alt={asset.symbol} width={32} height={32} className="h-6 w-6" />
                   </div>
 
                   <div className="flex-1">
-                    <div className="text-[15px] text-teal-900/90">{b.chain}</div>
-                    <div className="text-[13px] text-teal-900/70">{b.usd}</div>
+                    <div className="text-[15px] text-teal-900/90">{b.chain?.name}</div>
+                    <div className="text-[13px] text-teal-900/70">${b.balanceInFiat}</div>
                   </div>
 
                   <div className="text-right">
-                    <div className="text-[14px] tabular-nums text-teal-900/90">{b.amount}</div>
-                    <div className="text-[12px] text-teal-900/70">{b.usd}</div>
+                    <div className="text-[14px] tabular-nums text-teal-900/90">{b.balance}</div>
+                    <div className="text-[12px] text-teal-900/70">${b.balanceInFiat}</div>
                   </div>
                 </div>
               ))}

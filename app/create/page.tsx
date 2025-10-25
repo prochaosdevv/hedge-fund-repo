@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
@@ -15,8 +15,9 @@ import { Toaster } from "@/components/ui/toaster"
 import type { FundAllocation } from "@/lib/types"
 import { ArrowLeft, Info } from "lucide-react"
 import Link from "next/link"
-import { useAccount, useReadContract } from "wagmi"
-import { abi } from "../../config/hedge-fund";
+import { useAccount, useReadContract, useWriteContract } from "wagmi"
+import { HedgeAbi } from "../../config/hedge-fund";
+import { sepolia } from "viem/chains"
 
 export default function CreateFundPage() {
   const router = useRouter()
@@ -31,14 +32,23 @@ export default function CreateFundPage() {
 
   const totalAllocation = allocations.reduce((sum, alloc) => sum + alloc.percentage, 0)
   const isValid = fundName && description && allocations.length > 0 && totalAllocation === 100
-
+  const contractAddress = process.env.NEXT_PUBLIC_FUND_CONTRACT_ADDRESS as `0x${string}`
   const { data } = useReadContract({
-    address: "0xYourContractAddress",
-    abi,
+    address: contractAddress,
+    abi: HedgeAbi,
     functionName: "BPS_DENOM",
-    args: [],
+    chainId: sepolia.id, 
+    query: { enabled: true },
   });
   console.log(data)
+
+  const {
+    data: createFundHash,
+    writeContract: createFund,
+    isPending: isCreatingFund,
+    error: createError,
+    
+  } = useWriteContract();
 
   const handleCreateFund = async () => {
     if (!isConnected) {
@@ -63,13 +73,26 @@ export default function CreateFundPage() {
 
     try {
       // Simulate fund creation (in production, this would interact with smart contracts)
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      // await new Promise((resolve) => setTimeout(resolve, 2000))
+      const tokens = allocations.map(v  => v.asset.address)
+      const shares = allocations.map(v  => v.percentage)
 
       console.log("[v0] Creating fund:", {
         name: fundName,
         description,
         commissionRate: Number.parseFloat(commissionRate),
         allocations,
+        tokens,
+        shares
+      })
+
+      
+       createFund({
+        address: contractAddress as `0x${string}`,
+        abi: HedgeAbi,
+        chainId: sepolia.id,
+        functionName: 'createFund',
+        args: ["4u645ufgdgdf", Number.parseFloat(commissionRate)*100,tokens ,shares],
       })
 
       toast({
@@ -78,9 +101,9 @@ export default function CreateFundPage() {
       })
 
       // Redirect to explore page after creation
-      setTimeout(() => {
-        router.push("/explore")
-      }, 1500)
+      // setTimeout(() => {
+      //   router.push("/explore")
+      // }, 1500)
     } catch (error) {
       console.error("[v0] Error creating fund:", error)
       toast({
@@ -92,6 +115,20 @@ export default function CreateFundPage() {
       setIsCreating(false)
     }
   }
+
+  useEffect(() => {
+    if(createError){
+
+    console.log("CreateFundPage allocations:", createError)
+      toast({
+        title: "Failed to create fund",
+        description: "Please try again later",
+        variant: "destructive",
+      })
+    }
+
+  },[createError])
+
 
   return (
     <div className="min-h-screen bg-background">

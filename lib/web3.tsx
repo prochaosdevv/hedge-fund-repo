@@ -8,7 +8,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { WagmiProvider, useAccount, useDisconnect, useChainId } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { mainnet, polygon, optimism, arbitrum, base } from "wagmi/chains";
+import { mainnet, polygon, optimism, arbitrum, base, sepolia } from "wagmi/chains";
 import React, { createContext, useContext, type ReactNode, useMemo } from "react";
 
 type Web3ContextType = {
@@ -31,7 +31,8 @@ const WagmiBackedWeb3Context = createContext<Web3ContextType>({
 const wagmiConfig = getDefaultConfig({
   appName: "DeFi Hedge Fund Platform",
   projectId: "3b6a68297fa9e10b720a9fb6e1bf3ec8", // get from https://cloud.walletconnect.com
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+ 
+  chains: [mainnet, polygon, optimism, arbitrum, base, sepolia],
   ssr: true, // Next.js SSR
 });
 

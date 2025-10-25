@@ -4,6 +4,7 @@ import { useWeb3 } from "@/lib/web3";
 import { Button } from "@/components/ui/button";
 import { Wallet } from "lucide-react";
 import { useConnectModal, useAccountModal, useChainModal } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 
 type WalletButtonProps = {
   balance: number;
@@ -11,8 +12,8 @@ type WalletButtonProps = {
 };
 
 export function WalletButton({ balance, onBalanceClick }: WalletButtonProps) {
-  const { account, isConnected, connect } = useWeb3();
-
+  const { address, isConnected } = useAccount();
+ 
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
@@ -25,7 +26,13 @@ export function WalletButton({ balance, onBalanceClick }: WalletButtonProps) {
       ? balance.toLocaleString(undefined, { maximumFractionDigits: 6 })
       : String(balance ?? "");
 
-  if (isConnected && account) {
+    const connect = async () => {
+  //       // Open RainbowKit modal (WalletConnect, MetaMask, etc.)
+        if (openConnectModal) openConnectModal();
+      }
+
+
+  if (isConnected && address) {
     return (
       <div className="flex items-center justify-between gap-2">
         {/* $ button -> opens your custom Balances modal if provided */}
@@ -47,7 +54,7 @@ export function WalletButton({ balance, onBalanceClick }: WalletButtonProps) {
           aria-label="Open account modal"
         >
           <Wallet className="h-4 w-4" />
-          {formatAddress(account)}
+          {formatAddress(address)}
         </Button>
 
         {/* Network switcher -> RainbowKit Chain Modal */}

@@ -45,19 +45,19 @@ function Web3Bridge({ children }: { children: ReactNode }) {
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
 
-  const value = useMemo<Web3ContextType>(
-    () => ({
-      account: address ?? null,
-      isConnected,
-      chainId: chainId ?? null,
-      disconnect: () => disconnect(),
-      connect: async () => {
-        // Open RainbowKit modal (WalletConnect, MetaMask, etc.)
-        if (openConnectModal) openConnectModal();
-      },
-    }),
-    [address, isConnected, chainId, disconnect, openConnectModal]
-  );
+  // const value = useMemo<Web3ContextType>(
+  //   () => ({
+  //     account: address ?? null,
+  //     isConnected,
+  //     chainId: chainId ?? null,
+  //     disconnect: () => disconnect(),
+  //     connect: async () => {
+  //       // Open RainbowKit modal (WalletConnect, MetaMask, etc.)
+  //       if (openConnectModal) openConnectModal();
+  //     },
+  //   }),
+  //   [address, isConnected, chainId, disconnect, openConnectModal]
+  // );
 
   return (
     <WagmiBackedWeb3Context.Provider value={value}>

@@ -1,5 +1,4 @@
-export const HedgeAbi =  
-[
+export const HedgeAbi =  [
 	{
 		"inputs": [
 			{
@@ -83,6 +82,40 @@ export const HedgeAbi =
 		],
 		"name": "BridgingOut",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			},
+			{
+				"internalType": "uint16",
+				"name": "commissionBps",
+				"type": "uint16"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokens",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint16[]",
+				"name": "sharesBps",
+				"type": "uint16[]"
+			}
+		],
+		"name": "createFund",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "fundId",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -176,9 +209,9 @@ export const HedgeAbi =
 			},
 			{
 				"indexed": false,
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "uuid",
-				"type": "bytes32"
+				"type": "string"
 			},
 			{
 				"indexed": true,
@@ -195,6 +228,58 @@ export const HedgeAbi =
 		],
 		"name": "FundCreated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "grantRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "fundId",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint16",
+				"name": "slBelowBps",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "tpAboveBps",
+				"type": "uint16"
+			}
+		],
+		"name": "invest",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "investmentId",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -238,6 +323,55 @@ export const HedgeAbi =
 		],
 		"name": "InvestInitiated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "callerConfirmation",
+				"type": "address"
+			}
+		],
+		"name": "renounceRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "investmentId",
+				"type": "uint256"
+			}
+		],
+		"name": "requestExit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "revokeRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -346,6 +480,31 @@ export const HedgeAbi =
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "investmentId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "returnedAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "settleInvestment",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -378,32 +537,6 @@ export const HedgeAbi =
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "DEFAULT_ADMIN_ROLE",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "SETTLER_ROLE",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -423,37 +556,16 @@ export const HedgeAbi =
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "uuid",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint16",
-				"name": "commissionBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "address[]",
-				"name": "tokens",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint16[]",
-				"name": "sharesBps",
-				"type": "uint16[]"
-			}
-		],
-		"name": "createFund",
+		"inputs": [],
+		"name": "DEFAULT_ADMIN_ROLE",
 		"outputs": [
 			{
 				"internalType": "bytes32",
-				"name": "fundId",
+				"name": "",
 				"type": "bytes32"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -480,9 +592,9 @@ export const HedgeAbi =
 		"name": "getFund",
 		"outputs": [
 			{
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "uuid",
-				"type": "bytes32"
+				"type": "string"
 			},
 			{
 				"internalType": "address",
@@ -654,24 +766,6 @@ export const HedgeAbi =
 				"type": "address"
 			}
 		],
-		"name": "grantRole",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
 		"name": "hasRole",
 		"outputs": [
 			{
@@ -681,40 +775,6 @@ export const HedgeAbi =
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint16",
-				"name": "slBelowBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "tpAboveBps",
-				"type": "uint16"
-			}
-		],
-		"name": "invest",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -795,70 +855,16 @@ export const HedgeAbi =
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "SETTLER_ROLE",
+		"outputs": [
 			{
 				"internalType": "bytes32",
-				"name": "role",
+				"name": "",
 				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "callerConfirmation",
-				"type": "address"
 			}
 		],
-		"name": "renounceRole",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			}
-		],
-		"name": "requestExit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "revokeRole",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "returnedAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "settleInvestment",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -891,13 +897,6 @@ export const HedgeAbi =
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

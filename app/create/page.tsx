@@ -18,7 +18,21 @@ import Link from "next/link"
 import { useAccount, useReadContract, useWriteContract } from "wagmi"
 import { HedgeAbi } from "../../config/hedge-fund";
 import { sepolia } from "viem/chains"
-
+import {
+  type ExecuteParams,
+  type ExecuteResult,
+  type ExecuteSimulation,
+  type BridgeAndExecuteParams,
+  type BridgeAndExecuteResult,
+  type BridgeAndExecuteSimulationResult,
+  type SUPPORTED_TOKENS,
+  type SUPPORTED_CHAINS_IDS,
+  TOKEN_METADATA,
+  TOKEN_CONTRACT_ADDRESSES,
+  parseUnits,
+} from '@avail-project/nexus-core';
+import { sdk } from "@/lib/nexus"
+ 
 export default function CreateFundPage() {
   const router = useRouter()
   const { isConnected } = useAccount()
@@ -41,6 +55,25 @@ export default function CreateFundPage() {
     query: { enabled: true },
   });
   console.log(data)
+
+const generateParams = async (fundCreationParams: (string | number | number[] | string[])[]) => {
+const params = { 
+  toChainId: sepolia.id,
+  contractAddress: contractAddress, // Compound V3 USDC Market
+  contractAbi: HedgeAbi,
+  functionName: 'createFund',
+  buildFunctionParams: (
+  ) => {
+    return {
+      functionParams: fundCreationParams,
+    };
+  },
+  waitForReceipt: true,
+  requiredConfirmations: 3,
+} as ExecuteParams;
+return params;
+  }
+
 
   const {
     data: createFundHash,
@@ -75,7 +108,7 @@ export default function CreateFundPage() {
       // Simulate fund creation (in production, this would interact with smart contracts)
       // await new Promise((resolve) => setTimeout(resolve, 2000))
       const tokens = allocations.map(v  => v.asset.address)
-      const shares = allocations.map(v  => v.percentage)
+      const shares = allocations.map(v  => v.percentage*100)
 
       console.log("[v0] Creating fund:", {
         name: fundName,
@@ -85,21 +118,42 @@ export default function CreateFundPage() {
         tokens,
         shares
       })
+      const uuid = crypto.randomUUID();
+      const fundCreationParams =  [uuid, Number.parseFloat(commissionRate)*100,tokens ,shares]
+      const params = await generateParams(fundCreationParams) // Example amount
+      const simulation: ExecuteSimulation = await sdk.simulateExecute(params);
 
-      
-       createFund({
-        address: contractAddress as `0x${string}`,
-        abi: HedgeAbi,
-        chainId: sepolia.id,
-        functionName: 'createFund',
-        args: ["4u645ufgdgdf", Number.parseFloat(commissionRate)*100,tokens ,shares],
-      })
+      console.log("Simulation result:", simulation);
 
-      toast({
+      if(simulation.success) {
+        console.log("Simulation successful, proceeding to create fund...");
+
+      const executeResult: ExecuteResult = await sdk.execute(params);
+      console.log("Fund creation transaction hash:", executeResult.receipt);
+          toast({
         title: "Fund created successfully!",
         description: `${fundName} is now live and ready for investments`,
       })
 
+      }
+      else{
+          toast({
+        title: "Transaction Simulation Failed!",
+          description: "Please try again later",
+        variant: "destructive",
+      })
+
+      }
+      
+      //  createFund({
+      //   address: contractAddress as `0x${string}`,
+      //   abi: HedgeAbi,
+      //   chainId: sepolia.id,
+      //   functionName: 'createFund',
+      //   args: ["dsdfdsfsd", Number.parseFloat(commissionRate)*100,tokens ,shares],
+      // })
+
+    
       // Redirect to explore page after creation
       // setTimeout(() => {
       //   router.push("/explore")
@@ -117,6 +171,8 @@ export default function CreateFundPage() {
   }
 
   useEffect(() => {
+        console.log("CreateFundPage allocations:", createError)
+
     if(createError){
 
     console.log("CreateFundPage allocations:", createError)

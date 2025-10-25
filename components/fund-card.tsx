@@ -59,7 +59,7 @@ export function FundCard({ fund }: FundCardProps) {
               {fund.performance}%
             </Badge>
           </div>
-          <CardDescription className="text-text-muted text-sm">Manager: {formatAddress(fund.manager)}</CardDescription>
+          {/* <CardDescription className="text-text-muted text-sm">Manager: {formatAddress(fund.manager)}</CardDescription> */}
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -73,31 +73,31 @@ export function FundCard({ fund }: FundCardProps) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">1H</div>
-                <div className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.oneHour).color}`}>
+                {/* <div className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.oneHour).color}`}>
                   {formatPerformance(fund.performanceMetrics.oneHour).value}
-                </div>
+                </div> */}
               </div>
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">6H</div>
-                <div className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.sixHours).color}`}>
+                {/* <div className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.sixHours).color}`}>
                   {formatPerformance(fund.performanceMetrics.sixHours).value}
-                </div>
+                </div> */}
               </div>
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">24H</div>
-                <div
+                {/* <div
                   className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.twentyFourHours).color}`}
                 >
                   {formatPerformance(fund.performanceMetrics.twentyFourHours).value}
-                </div>
+                </div> */}
               </div>
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">48H</div>
-                <div
+                {/* <div
                   className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.fortyEightHours).color}`}
                 >
                   {formatPerformance(fund.performanceMetrics.fortyEightHours).value}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -106,14 +106,14 @@ export function FundCard({ fund }: FundCardProps) {
           <div className="space-y-2">
             <div className="text-sm font-medium text-text">Asset Allocation</div>
             <div className="flex flex-wrap gap-2">
-              {fund.allocations.map((alloc) => (
+              {fund.assets.map((alloc) => (
                 <div
-                  key={alloc.asset.symbol}
+                  key={alloc._id}
                   className="flex items-center gap-1 px-2 py-1 rounded bg-background border border-border"
                 >
-                  <span className="text-sm">{alloc.asset.icon}</span>
-                  <span className="text-sm text-text">{alloc.asset.symbol}</span>
-                  <span className="text-sm text-text-muted">{alloc.percentage}%</span>
+                  <span className="text-sm">{alloc.address}</span>
+                  {/* <span className="text-sm text-text">{alloc.asset.symbol}</span> */}
+                  <span className="text-sm text-text-muted">{alloc.share}%</span>
                 </div>
               ))}
             </div>
@@ -126,14 +126,14 @@ export function FundCard({ fund }: FundCardProps) {
                 <DollarSign className="h-3 w-3" />
                 Total Value
               </div>
-              <div className="text-text font-semibold">{formatCurrency(fund.totalValue)}</div>
+              <div className="text-text font-semibold">{formatCurrency(0)}</div>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-1 text-text-muted text-xs">
                 <Users className="h-3 w-3" />
                 Investors
               </div>
-              <div className="text-text font-semibold">{fund.investorCount}</div>
+              <div className="text-text font-semibold">{0}</div>
             </div>
           </div>
 

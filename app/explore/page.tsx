@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { FundCard } from "@/components/fund-card"
 import { Input } from "@/components/ui/input"
@@ -103,25 +103,40 @@ const MOCK_FUNDS: HedgeFund[] = [
 export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("performance")
+  const [funds, setFunds] = useState([])
 
-  const filteredFunds = MOCK_FUNDS.filter(
-    (fund) =>
-      fund.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      fund.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const getFunds = async () => {
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_API + '/funds');
+      const data = await response.json();
+      setFunds(data.data);
+    } catch (error) {
+      console.error("Error fetching funds:", error);
+    } 
+  }
 
-  const sortedFunds = [...filteredFunds].sort((a, b) => {
-    switch (sortBy) {
-      case "performance":
-        return b.performance - a.performance
-      case "totalValue":
-        return b.totalValue - a.totalValue
-      case "investors":
-        return b.investorCount - a.investorCount
-      default:
-        return 0
-    }
-  })
+  useEffect(() => {
+    getFunds();
+  }, []);
+
+  // const filteredFunds = MOCK_FUNDS.filter(
+  //   (fund) =>
+  //     fund.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     fund.description.toLowerCase().includes(searchQuery.toLowerCase()),
+  // )
+
+  // const sortedFunds = [...filteredFunds].sort((a, b) => {
+  //   switch (sortBy) {
+  //     case "performance":
+  //       return b.performance - a.performance
+  //     case "totalValue":
+  //       return b.totalValue - a.totalValue
+  //     case "investors":
+  //       return b.investorCount - a.investorCount
+  //     default:
+  //       return 0
+  //   }
+  // })
 
   return (
     <div className="min-h-screen bg-background">
@@ -145,7 +160,7 @@ export default function ExplorePage() {
             />
           </div>
 
-          <Select value={sortBy} onValueChange={setSortBy}>
+          {/* <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-full md:w-48 bg-surface border-border text-text">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -159,13 +174,13 @@ export default function ExplorePage() {
               <SelectItem value="totalValue">Total Value</SelectItem>
               <SelectItem value="investors">Investor Count</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
 
-        {sortedFunds.length > 0 ? (
+        {funds.length > 0 ? (
           <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {sortedFunds.map((fund) => (
-              <FundCard key={fund.id} fund={fund} />
+            {funds.map((fund) => (
+              <FundCard key={fund._id} fund={fund} />
             ))}
           </div>
         ) : (

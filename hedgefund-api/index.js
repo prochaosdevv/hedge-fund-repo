@@ -1,10 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 const app = express();
 app.use(express.json());
-
+app.use(cors({
+  origin: 'http://localhost:3000', // or "*" for all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true, // if you use cookies or auth headers
+}));
 // ---------- MongoDB (Mongoose) ----------
 const looksLikeEvmAddress = v => typeof v === "string" && /^0x[a-fA-F0-9]{40}$/.test(v);
 
@@ -31,7 +35,7 @@ const AssetSchema = new mongoose.Schema(
 const FundSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, minlength: 1, maxlength: 200 },
-    descirption: { type: String, required: true, trim: true, minlength: 1, maxlength: 200 },
+    description: { type: String, required: true, trim: true, minlength: 1, maxlength: 200 },
     commission: {
       type: Number,
       required: true,
@@ -79,14 +83,14 @@ async function connect() {
 }
 
 // ---------- Routes ----------
-
+ 
 // Health
-app.get("/", (_req, res) => res.send("Hedge Fund API (Mongo) is running"));
+app.get("/hedge/api", (_req, res) => res.send("Hedge Fund API (Mongo) is running"));
 
 // Create a hedge fund
-app.post("/funds", async (req, res) => {
+app.post("/hedge/api/funds", async (req, res) => {
   try {
-    const { name, descirption , commission, assets } = req.body;
+    const { name, description , commission, assets } = req.body;
 
     // normalize shares to numbers
     const normAssets = Array.isArray(assets)
@@ -95,7 +99,7 @@ app.post("/funds", async (req, res) => {
 
     const fund = await Fund.create({
       name: (name || "").trim(),
-      descirption: (descirption || "").trim(),
+      description: (description || "").trim(),
       commission: Number(commission),
       assets: normAssets
     });
@@ -113,7 +117,7 @@ app.post("/funds", async (req, res) => {
 });
 
 // Get all funds (filter + pagination)
-app.get("/funds", async (req, res) => {
+app.get("/hedge/api/funds", async (req, res) => {
   try {
     const { address } = req.query;
     const page = Math.max(1, parseInt(req.query.page || "1", 10));
@@ -138,7 +142,7 @@ app.get("/funds", async (req, res) => {
 });
 
 // Get a fund by id
-app.get("/funds/:id", async (req, res) => {
+app.get("/hedge/api/funds/:id", async (req, res) => {
   try {
     const fund = await Fund.findById(req.params.id).lean();
     if (!fund) return res.status(404).json({ error: "Fund not found" });

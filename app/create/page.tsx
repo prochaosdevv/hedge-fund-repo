@@ -32,6 +32,7 @@ import {
   parseUnits,
 } from '@avail-project/nexus-core';
 import { sdk } from "@/lib/nexus"
+import { API_URL } from "@/lib/constants"
  
 export default function CreateFundPage() {
   const router = useRouter()
@@ -123,7 +124,7 @@ const assets = allocations.map(v => ({
         shares
       })
 
-      const createApiResponse = await fetch('/funds', {
+      const createApiResponse = await fetch(API_URL+'/funds', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,11 +132,14 @@ const assets = allocations.map(v => ({
         body: JSON.stringify({
           name: fundName,
           description,
-          commissionRate: Number.parseFloat(commissionRate),
-          allocations,
+          commission: Number.parseFloat(commissionRate),
+          assets,
         }),
       });
-      const uuid = crypto.randomUUID();
+
+      const resJson = await createApiResponse.json();
+      console.log("Fund created with ID:", resJson);
+      const uuid = resJson._id;
       const fundCreationParams =  [uuid, Number.parseFloat(commissionRate)*100,tokens ,shares]
       const params = await generateParams(fundCreationParams) // Example amount
       const simulation: ExecuteSimulation = await sdk.simulateExecute(params);
@@ -144,14 +148,19 @@ const assets = allocations.map(v => ({
 
       if(simulation.success) {
         console.log("Simulation successful, proceeding to create fund...");
-
+    toast({
+        title: "Fund created successfully!",
+        description: `${fundName} is now live and ready for investments`,         
+      })
       const executeResult: ExecuteResult = await sdk.execute(params);
       console.log("Fund creation transaction hash:", executeResult.receipt);
           toast({
         title: "Fund created successfully!",
         description: `${fundName} is now live and ready for investments`,
       })
-
+  setTimeout(() => {
+        router.push("/explore")
+      }, 1500)
       }
       else{
           toast({
@@ -172,9 +181,7 @@ const assets = allocations.map(v => ({
 
     
       // Redirect to explore page after creation
-      // setTimeout(() => {
-      //   router.push("/explore")
-      // }, 1500)
+    
     } catch (error) {
       console.error("[v0] Error creating fund:", error)
       toast({

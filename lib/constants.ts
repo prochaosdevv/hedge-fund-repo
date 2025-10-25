@@ -1,5 +1,6 @@
 import type { Asset } from "./types"
 
+export const API_URL = process.env.NEXT_PUBLIC_API
 export const WHITELISTED_ASSETS: Asset[] = [
   {
     symbol: "ETH",

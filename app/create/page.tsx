@@ -109,15 +109,32 @@ return params;
       // await new Promise((resolve) => setTimeout(resolve, 2000))
       const tokens = allocations.map(v  => v.asset.address)
       const shares = allocations.map(v  => v.percentage*100)
-
+const assets = allocations.map(v => ({
+  address: v.asset.address,
+  share: v.percentage
+}));
       console.log("[v0] Creating fund:", {
         name: fundName,
         description,
         commissionRate: Number.parseFloat(commissionRate),
         allocations,
+        assets,
         tokens,
         shares
       })
+
+      const createApiResponse = await fetch('/funds', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: fundName,
+          description,
+          commissionRate: Number.parseFloat(commissionRate),
+          allocations,
+        }),
+      });
       const uuid = crypto.randomUUID();
       const fundCreationParams =  [uuid, Number.parseFloat(commissionRate)*100,tokens ,shares]
       const params = await generateParams(fundCreationParams) // Example amount

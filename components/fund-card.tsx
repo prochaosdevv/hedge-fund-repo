@@ -47,18 +47,18 @@ export function FundCard({ fund }: FundCardProps) {
         <CardHeader>
           <div className="flex items-start justify-between mb-2">
             <CardTitle className="text-text text-xl">{fund.name}</CardTitle>
-            {/* <Badge
-              variant={fund.performance > 0 ? "default" : "destructive"}
-              className={fund.performance > 0 ? "bg-success text-background" : ""}
+            * <Badge
+              variant={fund.managerPerfommace?.ai.riskScore || 0 > 0 ? "default" : "destructive"}
+              className={fund.managerPerfommace?.ai.riskScore || 0 > 0 ? "bg-success text-background" : ""}
             >
-              {fund.performance > 0 ? (
+              {fund.managerPerfommace?.ai.riskScore || 0 > 0 ? (
                 <TrendingUp className="h-3 w-3 mr-1" />
               ) : (
                 <TrendingDown className="h-3 w-3 mr-1" />
               )}
-              {fund.performance > 0 ? "+" : ""}
-              {fund.performance}%
-            </Badge> */}
+              {fund.managerPerfommace?.ai.riskScore || 0 > 0 ? "+" : ""}
+              {fund.managerPerfommace?.ai.riskScore || 0 }%
+            </Badge> 
           </div>
           <CardDescription className="text-text-muted text-sm">Manager: {formatAddress(fund.manager)}</CardDescription>
         </CardHeader>

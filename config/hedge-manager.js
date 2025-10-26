@@ -20,58 +20,6 @@ export const HedgeManagerAbi = [
 	{
 		"inputs": [
 			{
-				"internalType": "bytes16",
-				"name": "uuid",
-				"type": "bytes16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "commissionBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "address[]",
-				"name": "tokens",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint16[]",
-				"name": "sharesBps",
-				"type": "uint16[]"
-			}
-		],
-		"name": "createFund",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "invId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "usdcGrossOut",
-				"type": "uint256"
-			}
-		],
-		"name": "finalizeExit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "_usdc",
 				"type": "address"
@@ -132,6 +80,40 @@ export const HedgeManagerAbi = [
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			},
+			{
+				"internalType": "uint16",
+				"name": "commissionBps",
+				"type": "uint16"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokens",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint16[]",
+				"name": "sharesBps",
+				"type": "uint16[]"
+			}
+		],
+		"name": "createFund",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "fundId",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -182,6 +164,24 @@ export const HedgeManagerAbi = [
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "invId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "usdcGrossOut",
+				"type": "uint256"
+			}
+		],
+		"name": "finalizeExit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -217,9 +217,9 @@ export const HedgeManagerAbi = [
 			},
 			{
 				"indexed": false,
-				"internalType": "bytes16",
+				"internalType": "string",
 				"name": "uuid",
-				"type": "bytes16"
+				"type": "string"
 			},
 			{
 				"indexed": true,
@@ -248,9 +248,9 @@ export const HedgeManagerAbi = [
 			},
 			{
 				"indexed": true,
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "fundId",
-				"type": "bytes32"
+				"type": "string"
 			},
 			{
 				"indexed": true,
@@ -324,110 +324,33 @@ export const HedgeManagerAbi = [
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "bytes32",
-				"name": "priceId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "int64",
-				"name": "price",
-				"type": "int64"
-			},
-			{
-				"indexed": false,
-				"internalType": "int32",
-				"name": "expo",
-				"type": "int32"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint64",
-				"name": "conf",
-				"type": "uint64"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint64",
-				"name": "publishTime",
-				"type": "uint64"
+				"internalType": "address",
+				"name": "pyth",
+				"type": "address"
 			}
 		],
-		"name": "PricePushed",
+		"name": "PythSet",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "valueSent",
+				"type": "uint256"
+			}
+		],
+		"name": "PythUpdatesSubmitted",
 		"type": "event"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
-				"name": "priceId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "int64",
-				"name": "price",
-				"type": "int64"
-			},
-			{
-				"internalType": "int32",
-				"name": "expo",
-				"type": "int32"
-			},
-			{
-				"internalType": "uint64",
-				"name": "conf",
-				"type": "uint64"
-			},
-			{
-				"internalType": "uint64",
-				"name": "publishTime",
-				"type": "uint64"
-			}
-		],
-		"name": "pushPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32[]",
-				"name": "priceIds",
-				"type": "bytes32[]"
-			},
-			{
-				"internalType": "int64[]",
-				"name": "prices",
-				"type": "int64[]"
-			},
-			{
-				"internalType": "int32[]",
-				"name": "expos",
-				"type": "int32[]"
-			},
-			{
-				"internalType": "uint64[]",
-				"name": "confs",
-				"type": "uint64[]"
-			},
-			{
-				"internalType": "uint64[]",
-				"name": "publishTimes",
-				"type": "uint64[]"
-			}
-		],
-		"name": "pushPrices",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "fundId",
-				"type": "bytes32"
+				"type": "string"
 			},
 			{
 				"internalType": "address",
@@ -531,6 +454,32 @@ export const HedgeManagerAbi = [
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_pyth",
+				"type": "address"
+			}
+		],
+		"name": "setPyth",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes[]",
+				"name": "updateData",
+				"type": "bytes[]"
+			}
+		],
+		"name": "submitPythUpdates",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "newOwner",
 				"type": "address"
 			}
@@ -574,19 +523,6 @@ export const HedgeManagerAbi = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllFunds",
-		"outputs": [
-			{
-				"internalType": "bytes32[]",
-				"name": "",
-				"type": "bytes32[]"
 			}
 		],
 		"stateMutability": "view",
@@ -660,17 +596,17 @@ export const HedgeManagerAbi = [
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "fundId",
-				"type": "bytes32"
+				"type": "string"
 			}
 		],
 		"name": "getFund",
 		"outputs": [
 			{
-				"internalType": "bytes16",
+				"internalType": "string",
 				"name": "uuid",
-				"type": "bytes16"
+				"type": "string"
 			},
 			{
 				"internalType": "address",
@@ -704,25 +640,6 @@ export const HedgeManagerAbi = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "creator",
-				"type": "address"
-			}
-		],
-		"name": "getFundsByCreator",
-		"outputs": [
-			{
-				"internalType": "bytes32[]",
-				"name": "",
-				"type": "bytes32[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "invId",
 				"type": "uint256"
@@ -743,9 +660,9 @@ export const HedgeManagerAbi = [
 						"type": "address"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "string",
 						"name": "fundId",
-						"type": "bytes32"
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -845,9 +762,9 @@ export const HedgeManagerAbi = [
 				"type": "address"
 			},
 			{
-				"internalType": "bytes32",
+				"internalType": "string",
 				"name": "fundId",
-				"type": "bytes32"
+				"type": "string"
 			},
 			{
 				"internalType": "uint256",
@@ -995,40 +912,6 @@ export const HedgeManagerAbi = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"name": "latestPrice",
-		"outputs": [
-			{
-				"internalType": "int64",
-				"name": "price",
-				"type": "int64"
-			},
-			{
-				"internalType": "int32",
-				"name": "expo",
-				"type": "int32"
-			},
-			{
-				"internalType": "uint64",
-				"name": "conf",
-				"type": "uint64"
-			},
-			{
-				"internalType": "uint64",
-				"name": "publishTime",
-				"type": "uint64"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "nextInvestmentId",
 		"outputs": [
@@ -1068,6 +951,32 @@ export const HedgeManagerAbi = [
 				"internalType": "bytes32",
 				"name": "",
 				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "pyth",
+		"outputs": [
+			{
+				"internalType": "contract IPyth",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PYTH_MAX_AGE_SEC",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

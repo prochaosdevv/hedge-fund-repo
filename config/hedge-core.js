@@ -1,19 +1,14 @@
-export const HedgeCoreAbi =  [
+export const HedgeCoreAbi = [
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_usdc",
+				"name": "usdc",
 				"type": "address"
 			},
 			{
 				"internalType": "address",
-				"name": "_router",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_owner",
+				"name": "owner_",
 				"type": "address"
 			}
 		],
@@ -43,16 +38,89 @@ export const HedgeCoreAbi =  [
 		"type": "error"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "token",
+				"type": "address"
+			}
+		],
+		"name": "SafeERC20FailedOperation",
+		"type": "error"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
 				"indexed": true,
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			},
+			{
+				"indexed": true,
 				"internalType": "address",
-				"name": "manager",
+				"name": "token",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint16",
+				"name": "shareBps",
+				"type": "uint16"
+			}
+		],
+		"name": "FundAsset",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "creator",
 				"type": "address"
 			}
 		],
-		"name": "ManagerSet",
+		"name": "FundCreated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "invId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "investor",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "usdcAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "Invested",
 		"type": "event"
 	},
 	{
@@ -79,12 +147,18 @@ export const HedgeCoreAbi =  [
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "invId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
 			}
 		],
-		"name": "RouteCleared",
+		"name": "ProfitClaimed",
 		"type": "event"
 	},
 	{
@@ -92,43 +166,18 @@ export const HedgeCoreAbi =  [
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "address[]",
-				"name": "buyPath",
-				"type": "address[]"
-			},
-			{
-				"indexed": false,
-				"internalType": "address[]",
-				"name": "sellPath",
-				"type": "address[]"
-			}
-		],
-		"name": "RouteSet",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "slippageBps",
-				"type": "uint16"
+				"internalType": "uint256",
+				"name": "invId",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "deadlineSecs",
+				"name": "amount",
 				"type": "uint256"
 			}
 		],
-		"name": "SwapConfigUpdated",
+		"name": "ProfitCredited",
 		"type": "event"
 	},
 	{
@@ -160,12 +209,12 @@ export const HedgeCoreAbi =  [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "invId",
+				"type": "uint256"
 			}
 		],
-		"name": "clearRoute",
+		"name": "claimProfit",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -174,13 +223,8 @@ export const HedgeCoreAbi =  [
 		"inputs": [
 			{
 				"internalType": "string",
-				"name": "uuid",
+				"name": "fundId",
 				"type": "string"
-			},
-			{
-				"internalType": "uint16",
-				"name": "commissionBps",
-				"type": "uint16"
 			},
 			{
 				"internalType": "address[]",
@@ -194,19 +238,76 @@ export const HedgeCoreAbi =  [
 			}
 		],
 		"name": "createFund",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			}
-		],
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "defaultDeadlineSeconds",
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "invId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "profitUSDC",
+				"type": "uint256"
+			}
+		],
+		"name": "creditProfit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			}
+		],
+		"name": "getFund",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "uuid",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "creator",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tvlUSDC",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokens",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint16[]",
+				"name": "shares",
+				"type": "uint16[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			}
+		],
+		"name": "getFundAssetCount",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -220,14 +321,39 @@ export const HedgeCoreAbi =  [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getInvestmentsByUser",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "invId",
 				"type": "uint256"
 			}
 		],
-		"name": "exitInvestment",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "getUnclaimedProfit",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -241,16 +367,6 @@ export const HedgeCoreAbi =  [
 				"internalType": "uint256",
 				"name": "usdcAmount",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint16",
-				"name": "slBelowBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "tpAboveBps",
-				"type": "uint16"
 			}
 		],
 		"name": "invest",
@@ -265,13 +381,91 @@ export const HedgeCoreAbi =  [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "manager",
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "investments",
 		"outputs": [
 			{
-				"internalType": "contract IHFManager",
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "investor",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "principalUSDC",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "creditedProfitUSDC",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "claimedProfitUSDC",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "active",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "investmentsByUser",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "nextInvestmentId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -293,117 +487,6 @@ export const HedgeCoreAbi =  [
 	{
 		"inputs": [],
 		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "router",
-		"outputs": [
-			{
-				"internalType": "contract IUniswapV2Router",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_manager",
-				"type": "address"
-			}
-		],
-		"name": "setManager",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			},
-			{
-				"internalType": "address[]",
-				"name": "buyPath",
-				"type": "address[]"
-			},
-			{
-				"internalType": "address[]",
-				"name": "sellPath",
-				"type": "address[]"
-			}
-		],
-		"name": "setRoute",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint16",
-				"name": "_slip",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_deadlineSecs",
-				"type": "uint256"
-			}
-		],
-		"name": "setSwapConfig",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_USDC",
-				"type": "address"
-			}
-		],
-		"name": "setUSDC",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "slippageBps",
-		"outputs": [
-			{
-				"internalType": "uint16",
-				"name": "",
-				"type": "uint16"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "tk",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "portion",
-				"type": "uint256"
-			}
-		],
-		"name": "swapMock",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

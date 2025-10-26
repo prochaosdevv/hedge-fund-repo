@@ -1,7 +1,6 @@
 
 const fs =  require("fs");
-const path = require("path");
-const cron = require("node-cron");
+const path = require("path"); 
 const axios = require("axios");
 const  { fileURLToPath } = require("url");
 const dotenv = require("dotenv");

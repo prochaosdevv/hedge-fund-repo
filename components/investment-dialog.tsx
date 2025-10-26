@@ -76,7 +76,7 @@ export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogP
       userAddress: `0x${string}`,
     ) => {
       return {
-        functionParams: [{fundId: fund._id, usdcAmount: amountWei,slBelowBps: Number(stopLoss)*100, tpAboveBps: Number(takeProfit)*100, maxPriceAgeSec: 300}],
+        functionParams: [fund._id, amountWei],
       };
     },
     tokenApproval: {
@@ -140,10 +140,10 @@ export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogP
         description: `You've invested $${amount} in ${fund.name}`,
       })
 
-      // onOpenChange(false)
-      // setAmount("")
-      // setStopLoss("10")
-      // setTakeProfit("25")
+      onOpenChange(false)
+      setAmount("")
+      setStopLoss("10")
+      setTakeProfit("25")
             }
             else{
                 toast({

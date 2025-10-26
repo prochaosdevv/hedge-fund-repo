@@ -46,6 +46,17 @@ const FundSchema = new mongoose.Schema(
       min: [0, "commission must be between 0 and 100"],
       max: [100, "commission must be between 0 and 100"]
     },
+    performance: {
+      type: {}
+    },
+    investors: {
+     type : Number,
+      default : 0
+      },
+      tvl: {
+     type : Number,
+      default : 0
+      },
     assets: {
       type: [AssetSchema],
       validate: [
@@ -94,7 +105,7 @@ app.get("/hedge/api", (_req, res) => res.send("Hedge Fund API (Mongo) is running
 // Create a hedge fund
 app.post("/hedge/api/funds", async (req, res) => {
   try {
-    const { name, description , commission, assets } = req.body;
+    const { name, description , manager, commission, assets } = req.body;
 
     // normalize shares to numbers
     const normAssets = Array.isArray(assets)
@@ -105,6 +116,7 @@ app.post("/hedge/api/funds", async (req, res) => {
       name: (name || "").trim(),
       description: (description || "").trim(),
       commission: Number(commission),
+      manager: manager,
       assets: normAssets
     });
 

@@ -141,7 +141,7 @@ const assets = allocations.map(v => ({
       const resJson = await createApiResponse.json();
       console.log("Fund created with ID:", resJson);
       const uuid = resJson._id;
-      const fundCreationParams =  [uuid, Number.parseFloat(commissionRate)*100,tokens ,shares]
+      const fundCreationParams =  [uuid, tokens ,shares]
       const params = await generateParams(fundCreationParams) // Example amount
       const simulation: ExecuteSimulation = await sdk.simulateExecute(params);
 

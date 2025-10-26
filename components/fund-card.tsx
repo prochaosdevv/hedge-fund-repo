@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { InvestmentDialog } from "@/components/investment-dialog"
 import type { HedgeFund } from "@/lib/types"
 import { TrendingUp, TrendingDown, Users, DollarSign, Clock } from "lucide-react"
+import { WHITELISTED_ASSETS } from "@/lib/constants"
  
 
 interface FundCardProps {
@@ -46,7 +47,7 @@ export function FundCard({ fund }: FundCardProps) {
         <CardHeader>
           <div className="flex items-start justify-between mb-2">
             <CardTitle className="text-text text-xl">{fund.name}</CardTitle>
-            <Badge
+            {/* <Badge
               variant={fund.performance > 0 ? "default" : "destructive"}
               className={fund.performance > 0 ? "bg-success text-background" : ""}
             >
@@ -57,9 +58,9 @@ export function FundCard({ fund }: FundCardProps) {
               )}
               {fund.performance > 0 ? "+" : ""}
               {fund.performance}%
-            </Badge>
+            </Badge> */}
           </div>
-          {/* <CardDescription className="text-text-muted text-sm">Manager: {formatAddress(fund.manager)}</CardDescription> */}
+          <CardDescription className="text-text-muted text-sm">Manager: {formatAddress(fund.manager)}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -73,31 +74,34 @@ export function FundCard({ fund }: FundCardProps) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">1H</div>
-                {/* <div className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.oneHour).color}`}>
-                  {formatPerformance(fund.performanceMetrics.oneHour).value}
-                </div> */}
+                <div className={`text-sm font-semibold ${formatPerformance(fund.performance?.oneHour || 0).color}`}>
+                  
+                  {formatPerformance(fund.performance?.oneHour || 0 ).value}
+                </div>
               </div>
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">6H</div>
-                {/* <div className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.sixHours).color}`}>
-                  {formatPerformance(fund.performanceMetrics.sixHours).value}
-                </div> */}
+                <div className={`text-sm font-semibold ${formatPerformance(fund.performance?.sixHours || 0).color}`}>
+                  {formatPerformance(fund.performance?.sixHours || 0 ).value}
+                  
+                </div>
               </div>
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">24H</div>
-                {/* <div
-                  className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.twentyFourHours).color}`}
-                >
-                  {formatPerformance(fund.performanceMetrics.twentyFourHours).value}
-                </div> */}
+                <div
+                  className={`text-sm font-semibold ${formatPerformance(fund.performance?.twentyFourHours || 0).color}`}
+                > 
+                                   {formatPerformance(fund.performance?.twentyFourHours || 0 ).value}
+
+                </div>
               </div>
               <div className="bg-background border border-border rounded-lg p-2">
                 <div className="text-xs text-text-muted mb-1">48H</div>
-                {/* <div
-                  className={`text-sm font-semibold ${formatPerformance(fund.performanceMetrics.fortyEightHours).color}`}
-                >
-                  {formatPerformance(fund.performanceMetrics.fortyEightHours).value}
-                </div> */}
+                <div
+                  className={`text-sm font-semibold ${formatPerformance(fund.performance?.fortyEightHours || 0).color}`}
+                > 
+                     {formatPerformance(fund.performance?.fortyEightHours || 0 ).value}
+                </div>
               </div>
             </div>
           </div>
@@ -111,7 +115,7 @@ export function FundCard({ fund }: FundCardProps) {
                   key={alloc._id}
                   className="flex items-center gap-1 px-2 py-1 rounded bg-background border border-border"
                 >
-                  <span className="text-sm">{alloc.address}</span>
+                  <span className="text-sm">{WHITELISTED_ASSETS.find((v) => v.address == alloc.address )?.symbol}</span>
                   {/* <span className="text-sm text-text">{alloc.asset.symbol}</span> */}
                   <span className="text-sm text-text-muted">{alloc.share}%</span>
                 </div>
@@ -126,14 +130,14 @@ export function FundCard({ fund }: FundCardProps) {
                 <DollarSign className="h-3 w-3" />
                 Total Value
               </div>
-              <div className="text-text font-semibold">{formatCurrency(0)}</div>
+              <div className="text-text font-semibold">{formatCurrency(fund.tvl || 0)}</div>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-1 text-text-muted text-xs">
                 <Users className="h-3 w-3" />
                 Investors
               </div>
-              <div className="text-text font-semibold">{0}</div>
+              <div className="text-text font-semibold">{fund.inverstors || 0}</div>
             </div>
           </div>
 

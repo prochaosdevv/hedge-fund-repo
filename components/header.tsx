@@ -85,12 +85,12 @@ export function Header() {
             >
               Create Fund
             </Link>
-            <Link
+            {/* <Link
               href="/portfolio"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               Portfolio
-            </Link>
+            </Link> */}
           </nav>
        {/* {balances && (
           <pre className="whitespace-pre-wrap">${JSON.stringify(balances, null, 2)}</pre>

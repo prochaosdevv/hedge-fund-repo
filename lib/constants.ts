@@ -5,37 +5,20 @@ export const WHITELISTED_ASSETS: Asset[] = [
   {
     symbol: "ETH",
     name: "Ethereum",
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0x8278Ce69eB4E3859924D8c63287ae70e73FE0Ec8",
     icon: "⟠",
   },
   {
     symbol: "WBTC",
     name: "Wrapped Bitcoin",
-    address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    address: "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
     icon: "₿",
   },
   {
     symbol: "USDC",
     name: "USD Coin",
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    address: "0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4",
     icon: "$",
   },
-  {
-    symbol: "USDT",
-    name: "Tether",
-    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    icon: "₮",
-  },
-  {
-    symbol: "DAI",
-    name: "Dai Stablecoin",
-    address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-    icon: "◈",
-  },
-  {
-    symbol: "LINK",
-    name: "Chainlink",
-    address: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-    icon: "⬡",
-  },
+   
 ]

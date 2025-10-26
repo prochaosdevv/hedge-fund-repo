@@ -18,7 +18,7 @@ export interface PerformanceMetrics {
 }
 
 export interface HedgeFund {
-  id: string
+  _id: string
   name: string
   manager: string
   description: string

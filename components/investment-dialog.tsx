@@ -18,6 +18,11 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import type { HedgeFund } from "@/lib/types"
 import { Info, AlertTriangle } from "lucide-react"
+import { useAccount, useWriteContract } from "wagmi"
+import { sepolia } from "viem/chains"
+import { HedgeCoreAbi } from "../config/hedge-core";
+import { BridgeAndExecuteParams, BridgeAndExecuteResult, BridgeAndExecuteSimulationResult, ExecuteParams, parseUnits, SUPPORTED_CHAINS_IDS, SUPPORTED_TOKENS, TOKEN_METADATA } from "@avail-project/nexus-core"
+import { sdk } from "@/lib/nexus"
 
 interface InvestmentDialogProps {
   fund: HedgeFund
@@ -26,13 +31,64 @@ interface InvestmentDialogProps {
 }
 
 export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogProps) {
-  const { isConnected } = useWeb3()
+  const { isConnected } = useAccount()
   const { toast } = useToast()
 
   const [amount, setAmount] = useState("")
   const [stopLoss, setStopLoss] = useState("10")
   const [takeProfit, setTakeProfit] = useState("25")
   const [isInvesting, setIsInvesting] = useState(false)
+  const contractAddress = process.env.NEXT_PUBLIC_FUND_CONTRACT_ADDRESS as `0x${string}`
+  const { data : approveHash, writeContract: approveToken } = useWriteContract()
+  const approve = async () => {
+    if (!isConnected) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet to approve token spending",
+        variant: "destructive",
+      })
+      return
+    }
+
+    
+
+  }
+
+  const generateParams = async () => {
+    const decimals = TOKEN_METADATA['USDC'].decimals;
+      const amountWei = parseUnits(amount, decimals);
+
+      console.log("Generated params", {fundId: fund._id, usdcAmount: amountWei,slBelowBps: Number(stopLoss)*100, tpAboveBps: Number(takeProfit)*100, maxPriceAgeSec: 300});
+   
+  const params = {
+  token: 'USDC',
+  amount: amountWei.toString(), // 100 USDC (6 decimals)
+  toChainId: sepolia.id, // Ethereum
+  sourceChains: [1,8453,sepolia.id], // Only use USDC from `Base` as source for bridge
+  execute: {
+    contractAddress: contractAddress, // Yearn USDC Vault
+    contractAbi: HedgeCoreAbi,
+    functionName: 'invest',
+    buildFunctionParams: (
+      token: SUPPORTED_TOKENS,
+      amount: string,
+      chainId: SUPPORTED_CHAINS_IDS,
+      userAddress: `0x${string}`,
+    ) => {
+      return {
+        functionParams: [{fundId: fund._id, usdcAmount: amountWei,slBelowBps: Number(stopLoss)*100, tpAboveBps: Number(takeProfit)*100, maxPriceAgeSec: 300}],
+      };
+    },
+    tokenApproval: {
+      token: 'USDC',
+      amount: amountWei.toString(),
+    },
+  },
+  waitForReceipt: true,
+} as BridgeAndExecuteParams;
+
+  return params;
+    }
 
   const handleInvest = async () => {
     if (!isConnected) {
@@ -60,21 +116,45 @@ export function InvestmentDialog({ fund, open, onOpenChange }: InvestmentDialogP
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
       console.log("[v0] Investment details:", {
-        fundId: fund.id,
+        fundId: fund._id,
         amount: Number.parseFloat(amount),
         stopLoss: Number.parseFloat(stopLoss),
         takeProfit: Number.parseFloat(takeProfit),
       })
-
-      toast({
+     
+        const params = await generateParams() // Example amount
+        console.log("params",params)
+        const simulation: BridgeAndExecuteSimulationResult = await sdk.simulateBridgeAndExecute(params);
+      
+        console.log("Simulation result:", simulation);
+       if(simulation.success) {
+              console.log("Simulation successful, proceeding to invest in fund...");
+          toast({
+              title: "Transaction sent for confirmation!",
+              description: `Please confirm transaction in your wallet to invest in ${fund.name} Fund`,         
+            })
+            const executeResult: BridgeAndExecuteResult = await sdk.bridgeAndExecute(params);
+            console.log("Execute result:", executeResult);
+               toast({
         title: "Investment successful!",
         description: `You've invested $${amount} in ${fund.name}`,
       })
 
-      onOpenChange(false)
-      setAmount("")
-      setStopLoss("10")
-      setTakeProfit("25")
+      // onOpenChange(false)
+      // setAmount("")
+      // setStopLoss("10")
+      // setTakeProfit("25")
+            }
+            else{
+                toast({
+              title: "Transaction Simulation Failed!",
+                description: "Please try again later",
+              variant: "destructive",
+            })
+      
+            }
+
+   
     } catch (error) {
       console.error("[v0] Error investing:", error)
       toast({

@@ -36,6 +36,10 @@ const FundSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, minlength: 1, maxlength: 200 },
     description: { type: String, required: true, trim: true, minlength: 1, maxlength: 200 },
+    manager: { type: String, require: true,  validate: {
+        validator: looksLikeEvmAddress,
+        message: "manager must be a 0x-prefixed 40-hex address"
+      } },
     commission: {
       type: Number,
       required: true,

@@ -16,7 +16,7 @@ import type { FundAllocation } from "@/lib/types"
 import { ArrowLeft, Info } from "lucide-react"
 import Link from "next/link"
 import { useAccount, useReadContract, useWriteContract } from "wagmi"
-import { HedgeAbi } from "../../config/hedge-fund";
+import { HedgeManagerAbi } from "../../config/hedge-manager"
 import { sepolia } from "viem/chains"
 import {
   type ExecuteParams,
@@ -36,7 +36,7 @@ import { API_URL } from "@/lib/constants"
  
 export default function CreateFundPage() {
   const router = useRouter()
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
   const { toast } = useToast()
 
   const [fundName, setFundName] = useState("")
@@ -47,10 +47,10 @@ export default function CreateFundPage() {
 
   const totalAllocation = allocations.reduce((sum, alloc) => sum + alloc.percentage, 0)
   const isValid = fundName && description && allocations.length > 0 && totalAllocation === 100
-  const contractAddress = process.env.NEXT_PUBLIC_FUND_CONTRACT_ADDRESS as `0x${string}`
+  const contractAddress = process.env.NEXT_PUBLIC_MANAGER_CONTRACT_ADDRESS as `0x${string}`
   const { data } = useReadContract({
     address: contractAddress,
-    abi: HedgeAbi,
+    abi: HedgeManagerAbi,
     functionName: "BPS_DENOM",
     chainId: sepolia.id, 
     query: { enabled: true },
@@ -61,7 +61,7 @@ const generateParams = async (fundCreationParams: (string | number | number[] | 
 const params = { 
   toChainId: sepolia.id,
   contractAddress: contractAddress, // Compound V3 USDC Market
-  contractAbi: HedgeAbi,
+  contractAbi: HedgeManagerAbi,
   functionName: 'createFund',
   buildFunctionParams: (
   ) => {
@@ -132,6 +132,7 @@ const assets = allocations.map(v => ({
         body: JSON.stringify({
           name: fundName,
           description,
+          manager: address,
           commission: Number.parseFloat(commissionRate),
           assets,
         }),
@@ -149,8 +150,8 @@ const assets = allocations.map(v => ({
       if(simulation.success) {
         console.log("Simulation successful, proceeding to create fund...");
     toast({
-        title: "Fund created successfully!",
-        description: `${fundName} is now live and ready for investments`,         
+        title: "Transaction sent for confirmation!",
+        description: `Please confirm transaction in your wallet to create ${fundName} Fund`,         
       })
       const executeResult: ExecuteResult = await sdk.execute(params);
       console.log("Fund creation transaction hash:", executeResult.receipt);

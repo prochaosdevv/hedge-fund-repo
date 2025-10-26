@@ -43,17 +43,6 @@ export const HedgeCoreAbi =  [
 		"type": "error"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			}
-		],
-		"name": "SafeERC20FailedOperation",
-		"type": "error"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -244,36 +233,24 @@ export const HedgeCoreAbi =  [
 	{
 		"inputs": [
 			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "fundId",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "usdcAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint16",
-						"name": "slBelowBps",
-						"type": "uint16"
-					},
-					{
-						"internalType": "uint16",
-						"name": "tpAboveBps",
-						"type": "uint16"
-					},
-					{
-						"internalType": "uint256",
-						"name": "maxPriceAgeSec",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct HedgeFundCore.InvestCall",
-				"name": "c",
-				"type": "tuple"
+				"internalType": "string",
+				"name": "fundId",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "usdcAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint16",
+				"name": "slBelowBps",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "tpAboveBps",
+				"type": "uint16"
 			}
 		],
 		"name": "invest",
@@ -383,6 +360,19 @@ export const HedgeCoreAbi =  [
 			}
 		],
 		"name": "setSwapConfig",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_USDC",
+				"type": "address"
+			}
+		],
+		"name": "setUSDC",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

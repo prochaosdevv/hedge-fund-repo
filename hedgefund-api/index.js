@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const { runOnceAll, analyzeOnce } = require("./cron");
+const { type } = require("os");
 const app = express();
 app.use(express.json());
 app.use(cors({
@@ -47,6 +49,9 @@ const FundSchema = new mongoose.Schema(
       max: [100, "commission must be between 0 and 100"]
     },
     performance: {
+      type: {}
+    },
+    managerPerfommace: {
       type: {}
     },
     investors: {
@@ -172,6 +177,32 @@ app.get("/hedge/api/funds/:id", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+const runAgent = async () => {
+  const getFunds = await Fund.find();
+      console.log(`Asseing managers : ${getFunds.length}`);
+
+  for (const fund of getFunds) {
+    try {
+      console.log(`Asseing manager of ${fund.name}`);
+
+      const assessment = await analyzeOnce(fund.manager);
+      console.log(`Fund: ${fund.name} - Assessment: ${assessment}`);
+      await Fund.updateOne(
+        { _id: fund._id },
+        { $set: { managerPerfommace: assessment.report } }
+      );
+      // Here you can update the fund with the assessment if needed
+    } catch (error) {
+      console.error(`Error assessing fund ${fund.name}:`, error.message);
+    }
+}
+}
+
+setInterval(() => {
+runAgent();  
+}, 1000*30);
 
 // ---------- Server ----------
 const PORT = process.env.PORT || 3000;

@@ -1,47 +1,4 @@
-export const HedgeAbi = 
-[
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "stablecoin",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "admin",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "settler",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
-		"name": "AccessControlBadConfirmation",
-		"type": "error"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "neededRole",
-				"type": "bytes32"
-			}
-		],
-		"name": "AccessControlUnauthorizedAccount",
-		"type": "error"
-	},
+export const HedgeCoreAbi =  [
 	{
 		"inputs": [
 			{
@@ -50,46 +7,17 @@ export const HedgeAbi =
 				"type": "address"
 			}
 		],
-		"name": "SafeERC20FailedOperation",
-		"type": "error"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "bridge",
-				"type": "string"
-			}
-		],
-		"name": "BridgingOut",
-		"type": "event"
+		"name": "clearRoute",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "string",
+				"internalType": "bytes16",
 				"name": "uuid",
-				"type": "string"
+				"type": "bytes16"
 			},
 			{
 				"internalType": "uint16",
@@ -119,131 +47,19 @@ export const HedgeAbi =
 		"type": "function"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
 				"internalType": "uint256",
-				"name": "investmentId",
+				"name": "invId",
 				"type": "uint256"
 			},
 			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "shareBps",
-				"type": "uint16"
-			}
-		],
-		"name": "DexAllocation",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
 				"internalType": "uint256",
-				"name": "investmentId",
+				"name": "maxPriceAgeSec",
 				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "investor",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
 			}
 		],
-		"name": "ExitRequested",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "shareBps",
-				"type": "uint16"
-			}
-		],
-		"name": "FundAssets",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "creator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "commissionBps",
-				"type": "uint16"
-			}
-		],
-		"name": "FundCreated",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "grantRole",
+		"name": "exitInvestment",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -251,31 +67,43 @@ export const HedgeAbi =
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint16",
-				"name": "slBelowBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "tpAboveBps",
-				"type": "uint16"
+				"components": [
+					{
+						"internalType": "bytes32",
+						"name": "fundId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "usdcAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint16",
+						"name": "slBelowBps",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint16",
+						"name": "tpAboveBps",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maxPriceAgeSec",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct HedgeFundCore.InvestCall",
+				"name": "c",
+				"type": "tuple"
 			}
 		],
 		"name": "invest",
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "investmentId",
+				"name": "invId",
 				"type": "uint256"
 			}
 		],
@@ -283,120 +111,70 @@ export const HedgeAbi =
 		"type": "function"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "investor",
+				"name": "_usdc",
 				"type": "address"
 			},
 			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "slBelowBps",
-				"type": "uint16"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "tpAboveBps",
-				"type": "uint16"
-			}
-		],
-		"name": "InvestInitiated",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
+				"internalType": "address",
+				"name": "_router",
+				"type": "address"
 			},
 			{
 				"internalType": "address",
-				"name": "callerConfirmation",
+				"name": "_owner",
 				"type": "address"
 			}
 		],
-		"name": "renounceRole",
-		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
+		"type": "constructor"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
 			}
 		],
-		"name": "requestExit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "OwnableInvalidOwner",
+		"type": "error"
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
 			{
 				"internalType": "address",
 				"name": "account",
 				"type": "address"
 			}
 		],
-		"name": "revokeRole",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "token",
+				"type": "address"
+			}
+		],
+		"name": "SafeERC20FailedOperation",
+		"type": "error"
 	},
 	{
 		"anonymous": false,
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "previousAdminRole",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "newAdminRole",
-				"type": "bytes32"
+				"internalType": "address",
+				"name": "manager",
+				"type": "address"
 			}
 		],
-		"name": "RoleAdminChanged",
+		"name": "ManagerSet",
 		"type": "event"
 	},
 	{
@@ -404,103 +182,23 @@ export const HedgeAbi =
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "account",
+				"name": "previousOwner",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "sender",
+				"name": "newOwner",
 				"type": "address"
 			}
 		],
-		"name": "RoleGranted",
+		"name": "OwnershipTransferred",
 		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			}
-		],
-		"name": "RoleRevoked",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "returnedAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "commissionPaid",
-				"type": "uint256"
-			}
-		],
-		"name": "Settled",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "returnedAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "settleInvestment",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "withdraw",
+		"name": "renounceOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -511,18 +209,141 @@ export const HedgeAbi =
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "token",
+				"type": "address"
+			}
+		],
+		"name": "RouteCleared",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "token",
 				"type": "address"
 			},
 			{
 				"indexed": false,
+				"internalType": "address[]",
+				"name": "buyPath",
+				"type": "address[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "address[]",
+				"name": "sellPath",
+				"type": "address[]"
+			}
+		],
+		"name": "RouteSet",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_manager",
+				"type": "address"
+			}
+		],
+		"name": "setManager",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "token",
+				"type": "address"
+			},
+			{
+				"internalType": "address[]",
+				"name": "buyPath",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "sellPath",
+				"type": "address[]"
+			}
+		],
+		"name": "setRoute",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint16",
+				"name": "_slip",
+				"type": "uint16"
+			},
+			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "_deadlineSecs",
 				"type": "uint256"
 			}
 		],
-		"name": "Withdraw",
+		"name": "setSwapConfig",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint16",
+				"name": "slippageBps",
+				"type": "uint16"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "deadlineSecs",
+				"type": "uint256"
+			}
+		],
+		"name": "SwapConfigUpdated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "tk",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "portion",
+				"type": "uint256"
+			}
+		],
+		"name": "swapMock",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -538,14 +359,8 @@ export const HedgeAbi =
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "claimable",
+		"inputs": [],
+		"name": "defaultDeadlineSeconds",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -558,12 +373,12 @@ export const HedgeAbi =
 	},
 	{
 		"inputs": [],
-		"name": "DEFAULT_ADMIN_ROLE",
+		"name": "manager",
 		"outputs": [
 			{
-				"internalType": "bytes32",
+				"internalType": "contract IHFManager",
 				"name": "",
-				"type": "bytes32"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -571,272 +386,38 @@ export const HedgeAbi =
 	},
 	{
 		"inputs": [],
-		"name": "getAllFunds",
+		"name": "owner",
 		"outputs": [
 			{
-				"internalType": "bytes32[]",
+				"internalType": "address",
 				"name": "",
-				"type": "bytes32[]"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			}
-		],
-		"name": "getFund",
+		"inputs": [],
+		"name": "router",
 		"outputs": [
 			{
-				"internalType": "string",
-				"name": "uuid",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "creator",
+				"internalType": "contract IUniswapV2Router",
+				"name": "",
 				"type": "address"
-			},
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "slippageBps",
+		"outputs": [
 			{
 				"internalType": "uint16",
-				"name": "commissionBps",
+				"name": "",
 				"type": "uint16"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tvl",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address[]",
-				"name": "tokens",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint16[]",
-				"name": "shares",
-				"type": "uint16[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			}
-		],
-		"name": "getFundsByCreator",
-		"outputs": [
-			{
-				"internalType": "bytes32[]",
-				"name": "",
-				"type": "bytes32[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "investmentId",
-				"type": "uint256"
-			}
-		],
-		"name": "getInvestment",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "investor",
-						"type": "address"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "fundId",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "principal",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "entryTs",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint16",
-						"name": "slBelowBps",
-						"type": "uint16"
-					},
-					{
-						"internalType": "uint16",
-						"name": "tpAboveBps",
-						"type": "uint16"
-					},
-					{
-						"internalType": "bool",
-						"name": "active",
-						"type": "bool"
-					},
-					{
-						"internalType": "uint256",
-						"name": "settledAmount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "settlementTs",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct HedgeFundRouter.Investment",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			}
-		],
-		"name": "getInvestmentsByUser",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			}
-		],
-		"name": "getRoleAdmin",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "hasRole",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "investments",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "investor",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "fundId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "principal",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "entryTs",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint16",
-				"name": "slBelowBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "tpAboveBps",
-				"type": "uint16"
-			},
-			{
-				"internalType": "bool",
-				"name": "active",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "settledAmount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "settlementTs",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -844,57 +425,12 @@ export const HedgeAbi =
 	},
 	{
 		"inputs": [],
-		"name": "nextInvestmentId",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "SETTLER_ROLE",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "stable",
+		"name": "USDC",
 		"outputs": [
 			{
 				"internalType": "contract IERC20",
 				"name": "",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes4",
-				"name": "interfaceId",
-				"type": "bytes4"
-			}
-		],
-		"name": "supportsInterface",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
